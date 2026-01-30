@@ -116,39 +116,39 @@ const Home = () => {
         </div>
 
         {/* Hero Content */}
-        <div className="container relative z-10 text-center px-4 max-w-5xl mx-auto">
-            <div className="hero-text-element mb-8">
-                <span className="inline-block py-2 px-6 border border-white/20 bg-black/20 backdrop-blur-sm text-[10px] md:text-xs font-bold tracking-[0.3em] uppercase text-white/90 shadow-sm hover:bg-white/5 transition-colors cursor-default">
+        <div className="container relative z-10 text-center px-4 max-w-5xl mx-auto pt-20 md:pt-0">
+            <div className="hero-text-element mb-6 md:mb-8">
+                <span className="inline-block py-1.5 px-4 md:py-2 md:px-6 border border-white/20 bg-black/20 backdrop-blur-sm text-[9px] md:text-xs font-bold tracking-[0.3em] uppercase text-white/90 shadow-sm hover:bg-white/5 transition-colors cursor-default">
                     Next Gen Living Intelligence
                 </span>
             </div>
             
-            <h1 className="hero-text-element text-5xl md:text-7xl lg:text-8xl font-black text-white leading-tight mb-6 drop-shadow-xl">
+            <h1 className="hero-text-element text-4xl sm:text-5xl md:text-7xl lg:text-8xl font-black text-white leading-tight mb-6 drop-shadow-xl">
               Understand the <span className="text-[#FACC15] relative inline-block">
                 Place
-                <svg className="absolute w-full h-3 -bottom-1 left-0 text-[#A61B1B]" viewBox="0 0 100 10" preserveAspectRatio="none">
+                <svg className="absolute w-full h-2 md:h-3 -bottom-1 left-0 text-[#A61B1B]" viewBox="0 0 100 10" preserveAspectRatio="none">
                     <path d="M0 5 Q 50 10 100 5" stroke="currentColor" strokeWidth="8" fill="none" />
                 </svg>
               </span> <br/>
               Before You Rent the Space.
             </h1>
             
-            <p className="hero-text-element text-xl md:text-2xl text-gray-200 mb-10 max-w-2xl mx-auto font-light leading-relaxed">
+            <p className="hero-text-element text-lg md:text-2xl text-gray-200 mb-8 md:mb-10 max-w-2xl mx-auto font-light leading-relaxed px-4">
               We don't just show you apartments. We reveal the heartbeat of the neighborhood—safety, vibes, and community.
             </p>
             
-            <div className="hero-buttons flex flex-col sm:flex-row gap-5 justify-center items-center">
-              <Tilt tiltMaxAngleX={10} tiltMaxAngleY={10} scale={1.05}>
-                <Link to="/explore">
-                    <Button size="xl" className="h-16 px-10 text-xl bg-[#FACC15] text-[#4a0a0a] hover:bg-[#ffe066] font-bold rounded-xl shadow-[0_10px_20px_rgba(250,204,21,0.3)] border-b-4 border-[#d4ac0d] active:border-b-0 active:translate-y-1 transition-all">
-                        <MapPin className="mr-2 h-6 w-6" /> Explore Areas
+            <div className="hero-buttons flex flex-col sm:flex-row gap-4 md:gap-5 justify-center items-center w-full px-4 sm:px-0">
+              <Tilt tiltMaxAngleX={10} tiltMaxAngleY={10} scale={1.05} className="w-full sm:w-auto">
+                <Link to="/explore" className="block w-full sm:w-auto">
+                    <Button size="xl" className="w-full sm:w-auto h-14 md:h-16 px-8 md:px-10 text-lg md:text-xl bg-[#FACC15] text-[#4a0a0a] hover:bg-[#ffe066] font-bold rounded-xl shadow-[0_10px_20px_rgba(250,204,21,0.3)] border-b-4 border-[#d4ac0d] active:border-b-0 active:translate-y-1 transition-all">
+                        <MapPin className="mr-2 h-5 w-5 md:h-6 md:w-6" /> Explore Areas
                     </Button>
                 </Link>
               </Tilt>
               
-              <Tilt tiltMaxAngleX={10} tiltMaxAngleY={10} scale={1.05}>
-                <Link to="/list-property">
-                    <Button size="xl" variant="outline" className="h-16 px-10 text-xl bg-white/10 text-white border-2 border-white/30 hover:bg-white/20 font-bold rounded-xl backdrop-blur-md shadow-lg">
+              <Tilt tiltMaxAngleX={10} tiltMaxAngleY={10} scale={1.05} className="w-full sm:w-auto">
+                <Link to="/list-property" className="block w-full sm:w-auto">
+                    <Button size="xl" variant="outline" className="w-full sm:w-auto h-14 md:h-16 px-8 md:px-10 text-lg md:text-xl bg-white/10 text-white border-2 border-white/30 hover:bg-white/20 font-bold rounded-xl backdrop-blur-md shadow-lg">
                         List Property
                     </Button>
                 </Link>
@@ -163,22 +163,22 @@ const Home = () => {
       {/* STATS BAR (Floating Overlap) */}
       <div className="container relative z-20 -mt-16 px-4">
         <Tilt tiltMaxAngleX={5} tiltMaxAngleY={5} perspective={1000}>
-            <div className="stats-container bg-white rounded-2xl shadow-[0_20px_50px_rgba(0,0,0,0.1)] border border-gray-100 p-8 md:p-10 grid grid-cols-2 md:grid-cols-4 gap-8 divide-x divide-gray-100">
+            <div className="stats-container bg-white rounded-2xl shadow-[0_20px_50px_rgba(0,0,0,0.1)] border border-gray-100 p-6 md:p-10 grid grid-cols-2 md:grid-cols-4 gap-6 md:gap-8 divide-x divide-gray-100">
                 <div className="text-center group cursor-default">
-                    <h3 className="text-4xl font-black text-[#A61B1B] mb-1 group-hover:scale-110 transition-transform duration-300">50+</h3>
-                    <p className="text-gray-500 font-bold uppercase text-xs tracking-widest">Active Zones</p>
+                    <h3 className="text-3xl md:text-4xl font-black text-[#A61B1B] mb-1 group-hover:scale-110 transition-transform duration-300">50+</h3>
+                    <p className="text-gray-500 font-bold uppercase text-[10px] md:text-xs tracking-widest">Active Zones</p>
                 </div>
                 <div className="text-center group cursor-default">
-                    <h3 className="text-4xl font-black text-[#A61B1B] mb-1 group-hover:scale-110 transition-transform duration-300">10k+</h3>
-                    <p className="text-gray-500 font-bold uppercase text-xs tracking-widest">Verified Homes</p>
+                    <h3 className="text-3xl md:text-4xl font-black text-[#A61B1B] mb-1 group-hover:scale-110 transition-transform duration-300">10k+</h3>
+                    <p className="text-gray-500 font-bold uppercase text-[10px] md:text-xs tracking-widest">Verified Homes</p>
                 </div>
                 <div className="text-center group cursor-default">
-                    <h3 className="text-4xl font-black text-[#A61B1B] mb-1 group-hover:scale-110 transition-transform duration-300">98%</h3>
-                    <p className="text-gray-500 font-bold uppercase text-xs tracking-widest">Match Rate</p>
+                    <h3 className="text-3xl md:text-4xl font-black text-[#A61B1B] mb-1 group-hover:scale-110 transition-transform duration-300">98%</h3>
+                    <p className="text-gray-500 font-bold uppercase text-[10px] md:text-xs tracking-widest">Match Rate</p>
                 </div>
                 <div className="text-center group cursor-default">
-                    <h3 className="text-4xl font-black text-[#A61B1B] mb-1 group-hover:scale-110 transition-transform duration-300">0%</h3>
-                    <p className="text-gray-500 font-bold uppercase text-xs tracking-widest">Brokerage</p>
+                    <h3 className="text-3xl md:text-4xl font-black text-[#A61B1B] mb-1 group-hover:scale-110 transition-transform duration-300">0%</h3>
+                    <p className="text-gray-500 font-bold uppercase text-[10px] md:text-xs tracking-widest">Brokerage</p>
                 </div>
             </div>
         </Tilt>
@@ -300,8 +300,8 @@ const Home = () => {
                 </div>
 
                 {/* Content */}
-                <div className="reveal-text order-1 lg:order-2 space-y-8">
-                    <h2 className="text-4xl md:text-5xl font-black text-gray-900 leading-tight">
+                <div className="reveal-text order-1 lg:order-2 space-y-6 md:space-y-8">
+                    <h2 className="text-3xl md:text-5xl font-black text-gray-900 leading-tight">
                         Shift from <br/>
                         <span className="text-gray-400 decoration-4 line-through decoration-[#A61B1B]">"Which Room?"</span> <br/>
                         to <span className="text-[#A61B1B]">"Which Area?"</span>
@@ -339,7 +339,7 @@ const Home = () => {
                     
                     <div className="pt-4">
                         <Link to="/explore">
-                            <Button className="h-14 px-8 text-lg rounded-xl bg-[#A61B1B] hover:bg-[#8a1616] text-white shadow-lg shadow-red-900/20">
+                            <Button className="w-full sm:w-auto h-14 px-8 text-lg rounded-xl bg-[#A61B1B] hover:bg-[#8a1616] text-white shadow-lg shadow-red-900/20">
                                 Start Your Search <ArrowRight className="ml-2 h-5 w-5" />
                             </Button>
                         </Link>
@@ -353,20 +353,20 @@ const Home = () => {
       <section className="py-24 bg-[#4a0a0a] relative overflow-hidden text-center">
          <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-10"></div>
          <div className="container relative z-10 px-4">
-            <h2 className="text-4xl md:text-6xl font-black text-white mb-8">Ready to move smarter?</h2>
-            <p className="text-xl text-gray-300 mb-10 max-w-2xl mx-auto">
+            <h2 className="text-3xl md:text-6xl font-black text-white mb-6 md:mb-8">Ready to move smarter?</h2>
+            <p className="text-lg md:text-xl text-gray-300 mb-8 md:mb-10 max-w-2xl mx-auto">
                 Join thousands of users who found their perfect neighborhood with NEXLIV.
             </p>
-            <div className="flex justify-center gap-4">
+            <div className="flex justify-center gap-4 w-full">
                  {currentUser ? (
-                    <Link to="/profile">
-                        <Button size="xl" className="h-16 px-12 text-xl bg-[#FACC15] text-[#4a0a0a] hover:bg-white hover:text-[#A61B1B] font-bold rounded-full shadow-[0_0_30px_rgba(250,204,21,0.4)]">
+                    <Link to="/profile" className="w-full sm:w-auto">
+                        <Button size="xl" className="w-full sm:w-auto h-14 md:h-16 px-8 md:px-12 text-lg md:text-xl bg-[#FACC15] text-[#4a0a0a] hover:bg-white hover:text-[#A61B1B] font-bold rounded-full shadow-[0_0_30px_rgba(250,204,21,0.4)]">
                             Go to Dashboard
                         </Button>
                     </Link>
                  ) : (
-                     <Link to="/signup">
-                        <Button size="xl" className="h-16 px-12 text-xl bg-[#FACC15] text-[#4a0a0a] hover:bg-white hover:text-[#A61B1B] font-bold rounded-full shadow-[0_0_30px_rgba(250,204,21,0.4)]">
+                     <Link to="/signup" className="w-full sm:w-auto">
+                        <Button size="xl" className="w-full sm:w-auto h-14 md:h-16 px-8 md:px-12 text-lg md:text-xl bg-[#FACC15] text-[#4a0a0a] hover:bg-white hover:text-[#A61B1B] font-bold rounded-full shadow-[0_0_30px_rgba(250,204,21,0.4)]">
                             Get Started Now
                         </Button>
                      </Link>

@@ -5,18 +5,16 @@ import "leaflet/dist/leaflet.css";
 import { Icon } from "leaflet";
 import { MOCK_LOCALITIES, MOCK_PROPERTIES, Property } from "@/lib/data";
 import PropertyCard from "@/components/PropertyCard";
-import { Card, CardContent } from "@/components/ui/card";
+import { API_BASE_URL } from "@/config";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { 
   Search, Filter, Map as MapIcon, List, Shield, 
-  Wifi, Users, Zap, Star, Maximize2, Minimize2, MapPin
+  Users, Zap, Star, Maximize2
 } from "lucide-react";
 
 // Fix Leaflet icon issue
-import icon from 'leaflet/dist/images/marker-icon.png';
-import iconShadow from 'leaflet/dist/images/marker-shadow.png';
 
 const DefaultIcon = new Icon({
     iconUrl: "https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-gold.png",
@@ -38,7 +36,7 @@ const Explore = () => {
     fetch(`${API_BASE_URL}/api/properties`)
       .then(res => res.json())
       .then(data => setDbProperties(data))
-      .catch(err => console.log("Backend not reachable, displaying mock data only"));
+      .catch(() => console.log("Backend not reachable, displaying mock data only"));
   }, []);
 
   // Normalize DB properties to match Mock Property interface
