@@ -2,6 +2,7 @@ import { useEffect, useRef } from "react";
 import { Button } from "@/components/ui/button";
 import { ArrowRight, MapPin, Activity, Users, Building2, BarChart3, ShieldCheck, CheckCircle, Search, Heart, Sparkles } from "lucide-react";
 import { Link } from "react-router-dom";
+import { motion } from "framer-motion";
 import { useAuth } from "@/context/AuthContext";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
@@ -82,6 +83,22 @@ const Home = () => {
 
   return (
     <div ref={mainRef} className="overflow-x-hidden bg-gray-50 min-h-screen font-sans">
+      <motion.div
+        initial={{ opacity: 0, y: -20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5 }}
+        className="fixed top-6 left-6 z-50 group"
+      >
+        <Link to="/">
+          <div className="flex items-center gap-0 transition-transform hover:scale-105">
+              <img src="/NexLiv_Logo.png" alt="NexLiv Logo" className="h-32 w-auto object-contain drop-shadow-2xl" />
+              <div className="flex flex-col -ml-6">
+                  <span className="font-black text-6xl tracking-tighter text-white drop-shadow-[0_4px_4px_rgba(0,0,0,0.5)] leading-none font-sans">NEXLIV</span>
+                  <span className="text-sm font-bold tracking-[0.2em] text-white/90 uppercase leading-none mt-1.5 drop-shadow-md ml-1">Real Estate</span>
+              </div>
+          </div>
+        </Link>
+      </motion.div>
       
       {/* HERO SECTION */}
       <section className="relative min-h-[90vh] flex items-center justify-center overflow-hidden">

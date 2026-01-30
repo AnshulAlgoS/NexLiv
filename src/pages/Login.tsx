@@ -82,9 +82,17 @@ const Login = () => {
         <div className="hidden lg:flex w-1/2 flex-col justify-between relative z-10 p-16 bg-[#fdfbf7]">
             {/* Top Branding */}
             <div>
-                <div className="inline-flex items-center gap-3 mb-10">
-                    <img src="/NexLiv_Logo.png" alt="NexLiv Logo" className="h-24 w-auto object-contain" />
-                    <span className="font-bold text-[#2a0808] text-3xl tracking-tight">NEXLIV</span>
+                <div className="inline-flex items-center shadow-[0_20px_40px_rgba(0,0,0,0.4)] mb-10 transform -rotate-2 hover:rotate-0 transition-transform duration-300">
+                    {/* Left Box: Logo */}
+                    <div className="bg-[#800020] border-[6px] border-black h-28 w-28 flex justify-center items-center overflow-hidden z-10 relative">
+                        <img src="/NexLiv_Logo.png" alt="NexLiv Logo" className="w-full h-full object-contain drop-shadow-md scale-125" />
+                    </div>
+                    {/* Right Box: Text Container */}
+                    <div className="bg-black border-y-[6px] border-r-[6px] border-black h-28 flex items-center px-6 -ml-1">
+                        <div className="bg-[#800020] px-8 py-3 transform skew-x-[-10deg] border-2 border-black/20 shadow-inner">
+                            <span className="font-black text-white text-4xl tracking-widest transform skew-x-[10deg] block">NEXLIV</span>
+                        </div>
+                    </div>
                 </div>
                 
                 <motion.div

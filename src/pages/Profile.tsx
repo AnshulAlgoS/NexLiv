@@ -1,29 +1,146 @@
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
+import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/context/AuthContext";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { User, Mail, Phone, MapPin, Edit2, LogOut, Shield, Heart, Home } from "lucide-react";
+import { useToast } from "@/components/ui/use-toast";
+import { 
+  Mail, Phone, MapPin, Edit2, LogOut, Shield, Heart, Home,  
+  ArrowRight, Camera, X, Plus, Save, Loader2 
+} from "lucide-react";
+import { storage } from "@/lib/firebase";
+import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 
 const Profile = () => {
-  const { currentUser, logout } = useAuth();
+  const { currentUser, logout, userRole, userProfile, updateUserProfile } = useAuth();
+  const navigate = useNavigate();
+  const { toast } = useToast();
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
   const [isEditing, setIsEditing] = useState(false);
-  const [profileData, setProfileData] = useState({
-    name: currentUser?.displayName || "User",
-    email: currentUser?.email || "user@example.com",
-    phone: "+91 98765 43210",
-    location: "Bangalore, India",
-    bio: "Looking for a peaceful place to stay near my workplace.",
-    preferences: ["Non-smoker", "Vegetarian", "Early Riser"]
+  const [isSaving, setIsSaving] = useState(false);
+  const [isUploading, setIsUploading] = useState(false);
+  
+  // Local state for form data
+  const [formData, setFormData] = useState({
+    displayName: "",
+    email: "",
+    phone: "",
+    location: "",
+    bio: "",
+    specificNeeds: "",
+    preferences: [] as string[]
   });
 
-  const handleSave = () => {
-    setIsEditing(false);
-    console.log("Profile updated:", profileData);
+  const [newPreference, setNewPreference] = useState("");
+
+  // Sync with userProfile when it loads
+  useEffect(() => {
+    if (userProfile) {
+      setFormData({
+        displayName: userProfile.displayName || currentUser?.displayName || "",
+        email: userProfile.email || currentUser?.email || "",
+        phone: userProfile.phone || "",
+        location: userProfile.location || "",
+        bio: userProfile.bio || "",
+        specificNeeds: userProfile.specificNeeds || "",
+        preferences: userProfile.preferences || []
+      });
+    }
+  }, [userProfile, currentUser]);
+
+  const handleSave = async () => {
+    setIsSaving(true);
+    try {
+      await updateUserProfile(formData);
+      toast({
+        title: "Profile Updated",
+        description: "Your profile information has been saved successfully.",
+      });
+      setIsEditing(false);
+    } catch (error) {
+      console.error("Error updating profile:", error);
+      toast({
+        variant: "destructive",
+        title: "Update Failed",
+        description: "There was a problem saving your profile. Please try again.",
+      });
+    } finally {
+      setIsSaving(false);
+    }
+  };
+
+  const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file || !currentUser) return;
+
+    if (file.size > 5 * 1024 * 1024) { // 5MB limit
+      toast({
+        variant: "destructive",
+        title: "File too large",
+        description: "Please select an image under 5MB.",
+      });
+      return;
+    }
+
+    setIsUploading(true);
+    try {
+      // Create a reference to 'profile_images/uid'
+      const storageRef = ref(storage, `profile_images/${currentUser.uid}`);
+      
+      // Upload the file
+      await uploadBytes(storageRef, file);
+      
+      // Get the download URL
+      const downloadURL = await getDownloadURL(storageRef);
+      
+      // Update profile with new photoURL
+      await updateUserProfile({ photoURL: downloadURL });
+      
+      toast({
+        title: "Photo Updated",
+        description: "Your profile picture has been updated.",
+      });
+    } catch (error) {
+      console.error("Error uploading image:", error);
+      toast({
+        variant: "destructive",
+        title: "Upload Failed",
+        description: "Could not upload image. Please try again.",
+      });
+    } finally {
+      setIsUploading(false);
+    }
+  };
+
+  const addPreference = () => {
+    if (newPreference.trim() && !formData.preferences.includes(newPreference.trim())) {
+      setFormData(prev => ({
+        ...prev,
+        preferences: [...prev.preferences, newPreference.trim()]
+      }));
+      setNewPreference("");
+    }
+  };
+
+  const removePreference = (prefToRemove: string) => {
+    setFormData(prev => ({
+      ...prev,
+      preferences: prev.preferences.filter(p => p !== prefToRemove)
+    }));
+  };
+
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      addPreference();
+    }
   };
 
   return (
@@ -36,16 +153,35 @@ const Profile = () => {
             <Card className="card-3d border-gray-200 overflow-hidden">
               <div className="h-32 bg-brand-gradient"></div>
               <div className="px-6 relative">
-                <Avatar className="h-24 w-24 absolute -top-12 border-4 border-white shadow-md">
-                  <AvatarImage src={currentUser?.photoURL || ""} />
-                  <AvatarFallback className="bg-[#FACC15] text-[#A61B1B] text-2xl font-bold">
-                    {profileData.name.charAt(0)}
-                  </AvatarFallback>
-                </Avatar>
-                <div className="pt-16 pb-6">
-                   <h2 className="text-2xl font-bold text-gray-900">{profileData.name}</h2>
+                <div className="relative inline-block -top-12">
+                  <Avatar className="h-24 w-24 border-4 border-white shadow-md">
+                    <AvatarImage src={currentUser?.photoURL || ""} className="object-cover" />
+                    <AvatarFallback className="bg-[#FACC15] text-[#A61B1B] text-2xl font-bold">
+                      {formData.displayName.charAt(0) || "U"}
+                    </AvatarFallback>
+                  </Avatar>
+                  <Button 
+                    size="icon" 
+                    variant="secondary" 
+                    className="absolute bottom-0 right-0 rounded-full h-8 w-8 shadow-sm"
+                    onClick={() => fileInputRef.current?.click()}
+                    disabled={isUploading}
+                  >
+                    {isUploading ? <Loader2 className="h-4 w-4 animate-spin" /> : <Camera className="h-4 w-4" />}
+                  </Button>
+                  <input 
+                    type="file" 
+                    ref={fileInputRef} 
+                    className="hidden" 
+                    accept="image/*"
+                    onChange={handleImageUpload}
+                  />
+                </div>
+                
+                <div className="pt-0 pb-6">
+                   <h2 className="text-2xl font-bold text-gray-900">{formData.displayName || "User"}</h2>
                    <p className="text-gray-500 flex items-center gap-1 mt-1">
-                     <MapPin className="h-4 w-4" /> {profileData.location}
+                     <MapPin className="h-4 w-4" /> {formData.location || "Location not set"}
                    </p>
                    <div className="mt-4 flex flex-wrap gap-2">
                      <Badge variant="secondary" className="bg-green-100 text-green-700 hover:bg-green-200">Verified User</Badge>
@@ -56,12 +192,21 @@ const Profile = () => {
               <div className="border-t border-gray-100 p-6 space-y-4">
                 <div className="flex items-center gap-3 text-gray-600">
                   <Mail className="h-5 w-5 text-[#A61B1B]" />
-                  <span className="text-sm">{profileData.email}</span>
+                  <span className="text-sm">{formData.email}</span>
                 </div>
                 <div className="flex items-center gap-3 text-gray-600">
                   <Phone className="h-5 w-5 text-[#A61B1B]" />
-                  <span className="text-sm">{profileData.phone}</span>
+                  <span className="text-sm">{formData.phone || "No phone added"}</span>
                 </div>
+                
+                <Button 
+                    className="w-full mt-6 bg-gradient-to-r from-[#800020] to-[#A61B1B] text-white hover:opacity-90"
+                    onClick={() => navigate(userRole === 'owner' ? '/list-property' : '/explore')}
+                >
+                    {userRole === 'owner' ? 'List Your Property' : 'Start Exploring'} 
+                    <ArrowRight className="h-4 w-4 ml-2" />
+                </Button>
+
                 <Button 
                     variant="outline" 
                     className="w-full mt-4 border-[#A61B1B] text-[#A61B1B] hover:bg-red-50"
@@ -88,8 +233,8 @@ const Profile = () => {
                         <div className="flex items-center gap-2 text-sm text-green-600">
                             <Shield className="h-4 w-4" /> Email Verified
                         </div>
-                        <div className="flex items-center gap-2 text-sm text-green-600">
-                            <Shield className="h-4 w-4" /> Phone Verified
+                        <div className="flex items-center gap-2 text-sm text-gray-400">
+                            <Shield className="h-4 w-4" /> Phone Verified (Pending)
                         </div>
                         <div className="flex items-center gap-2 text-sm text-gray-400">
                             <Shield className="h-4 w-4" /> Govt ID (Pending)
@@ -131,12 +276,19 @@ const Profile = () => {
                         <CardDescription>Manage your personal details and preferences.</CardDescription>
                     </div>
                     <Button 
-                        variant="ghost" 
+                        variant={isEditing ? "default" : "ghost"}
                         size="sm" 
                         onClick={() => isEditing ? handleSave() : setIsEditing(true)}
-                        className={isEditing ? "bg-green-100 text-green-700 hover:bg-green-200" : ""}
+                        disabled={isSaving}
+                        className={isEditing ? "bg-green-600 hover:bg-green-700 text-white" : "text-[#A61B1B] hover:bg-red-50"}
                     >
-                        {isEditing ? "Save Changes" : <><Edit2 className="h-4 w-4 mr-2" /> Edit Profile</>}
+                        {isSaving ? (
+                          <><Loader2 className="h-4 w-4 mr-2 animate-spin" /> Saving...</>
+                        ) : isEditing ? (
+                          <><Save className="h-4 w-4 mr-2" /> Save Changes</>
+                        ) : (
+                          <><Edit2 className="h-4 w-4 mr-2" /> Edit Profile</>
+                        )}
                     </Button>
                   </CardHeader>
                   <CardContent className="space-y-6">
@@ -145,58 +297,101 @@ const Profile = () => {
                             <Label>Full Name</Label>
                             <Input 
                                 disabled={!isEditing} 
-                                value={profileData.name} 
-                                onChange={(e) => setProfileData({...profileData, name: e.target.value})}
+                                value={formData.displayName} 
+                                onChange={(e) => setFormData({...formData, displayName: e.target.value})}
+                                placeholder="Enter your full name"
                             />
                         </div>
                         <div className="space-y-2">
                             <Label>Email</Label>
                             <Input 
-                                disabled={!isEditing} 
-                                value={profileData.email} 
-                                onChange={(e) => setProfileData({...profileData, email: e.target.value})}
+                                disabled={true} // Email usually not editable directly
+                                value={formData.email} 
+                                className="bg-gray-50"
                             />
                         </div>
                         <div className="space-y-2">
                             <Label>Phone Number</Label>
                             <Input 
                                 disabled={!isEditing} 
-                                value={profileData.phone} 
-                                onChange={(e) => setProfileData({...profileData, phone: e.target.value})}
+                                value={formData.phone} 
+                                onChange={(e) => setFormData({...formData, phone: e.target.value})}
+                                placeholder="+91 98765 43210"
                             />
                         </div>
                         <div className="space-y-2">
                             <Label>Location</Label>
                             <Input 
                                 disabled={!isEditing} 
-                                value={profileData.location} 
-                                onChange={(e) => setProfileData({...profileData, location: e.target.value})}
+                                value={formData.location} 
+                                onChange={(e) => setFormData({...formData, location: e.target.value})}
+                                placeholder="e.g. Bangalore, India"
                             />
                         </div>
                     </div>
                     
                     <div className="space-y-2">
                         <Label>Bio</Label>
-                        <Input 
+                        <Textarea 
                             disabled={!isEditing} 
-                            value={profileData.bio} 
-                            onChange={(e) => setProfileData({...profileData, bio: e.target.value})}
+                            value={formData.bio} 
+                            onChange={(e) => setFormData({...formData, bio: e.target.value})}
+                            placeholder="Tell us a bit about yourself..."
+                            className="resize-none h-24"
                         />
                     </div>
 
                     <div className="space-y-2">
                         <Label className="mb-2 block">Lifestyle Preferences</Label>
-                        <div className="flex flex-wrap gap-2">
-                            {profileData.preferences.map((pref, i) => (
-                                <Badge key={i} variant="secondary" className="px-3 py-1 text-sm bg-gray-100 text-gray-700">
+                        <div className="flex flex-wrap gap-2 mb-3">
+                            {formData.preferences.map((pref, i) => (
+                                <Badge key={i} variant="secondary" className="px-3 py-1 text-sm bg-gray-100 text-gray-700 flex items-center gap-1">
                                     {pref}
+                                    {isEditing && (
+                                      <button onClick={() => removePreference(pref)} className="ml-1 hover:text-red-500">
+                                        <X className="h-3 w-3" />
+                                      </button>
+                                    )}
                                 </Badge>
                             ))}
-                            {isEditing && (
-                                <Button variant="outline" size="sm" className="h-7 text-xs border-dashed">+ Add Tag</Button>
+                            {formData.preferences.length === 0 && !isEditing && (
+                              <span className="text-sm text-gray-400 italic">No preferences added yet.</span>
                             )}
                         </div>
+                        
+                        {isEditing && (
+                          <div className="flex gap-2 max-w-sm">
+                            <Input 
+                              value={newPreference}
+                              onChange={(e) => setNewPreference(e.target.value)}
+                              onKeyDown={handleKeyDown}
+                              placeholder="Add a tag (e.g. Non-smoker)"
+                              className="h-9"
+                            />
+                            <Button 
+                              type="button" 
+                              variant="outline" 
+                              size="sm" 
+                              onClick={addPreference}
+                              className="shrink-0"
+                            >
+                              <Plus className="h-4 w-4" />
+                            </Button>
+                          </div>
+                        )}
                     </div>
+
+                    <div className="space-y-2">
+                        <Label>Specific Needs / Requirements</Label>
+                        <Textarea 
+                            disabled={!isEditing} 
+                            value={formData.specificNeeds} 
+                            onChange={(e) => setFormData({...formData, specificNeeds: e.target.value})}
+                            placeholder="Do you have any specific requirements? e.g. Wheelchair access, Pet friendly..."
+                            className="resize-none h-24"
+                        />
+                    </div>
+
                   </CardContent>
                 </Card>
               </TabsContent>

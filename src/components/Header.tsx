@@ -47,16 +47,6 @@ const Header = () => {
 
   return (
     <>
-      <Link to="/" className="fixed top-6 left-6 z-50 group">
-        <div className="flex items-center gap-0 transition-transform hover:scale-105">
-            <img src="/NexLiv_Logo.png" alt="NexLiv Logo" className="h-32 w-auto object-contain drop-shadow-2xl" />
-            <div className="flex flex-col -ml-6">
-                <span className="font-black text-6xl tracking-tighter text-white drop-shadow-[0_4px_4px_rgba(0,0,0,0.5)] leading-none font-sans">NEXLIV</span>
-                <span className="text-sm font-bold tracking-[0.2em] text-white/90 uppercase leading-none mt-1.5 drop-shadow-md ml-1">Real Estate</span>
-            </div>
-        </div>
-      </Link>
-
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
@@ -67,7 +57,7 @@ const Header = () => {
           onClick={() => setIsMenuOpen(!isMenuOpen)}
           className="group relative h-12 w-12 rounded-full bg-black/5 backdrop-blur-md border border-white/10 shadow-lg flex items-center justify-center overflow-hidden transition-all hover:scale-110 hover:bg-black/10"
         >
-          <div className="relative z-10 mix-blend-difference">
+          <div className={`relative z-10 ${!isMenuOpen && location.pathname === '/' ? 'mix-blend-difference' : ''}`}>
             <AnimatePresence mode="wait">
               {isMenuOpen ? (
                 <motion.div
@@ -85,7 +75,7 @@ const Header = () => {
                   animate={{ rotate: 0, opacity: 1 }}
                   exit={{ rotate: -90, opacity: 0 }}
                 >
-                  <Menu className="h-6 w-6 text-white" />
+                  <Menu className={`h-6 w-6 ${location.pathname === '/' ? 'text-white' : 'text-[#800020]'}`} />
                 </motion.div>
               )}
             </AnimatePresence>

@@ -24,6 +24,11 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
   }, [currentUser, userRole, loading, location.pathname, navigate]);
 
   useEffect(() => {
+    // Disable smooth scrolling on Explore page to allow native inner scrolling
+    if (location.pathname.startsWith('/explore')) {
+      return;
+    }
+
     const lenis = new Lenis({
       duration: 1.2,
       easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
@@ -54,7 +59,7 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
       lenis.destroy();
       gsap.ticker.remove(raf);
     };
-  }, []);
+  }, [location.pathname]);
 
   useEffect(() => {
     if (lenisRef.current) {

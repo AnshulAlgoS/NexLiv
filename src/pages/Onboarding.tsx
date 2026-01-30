@@ -6,9 +6,12 @@ import { Home, Key, Check, ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { AuthMascot } from "@/components/AuthMascot";
 
+import { useToast } from "@/components/ui/use-toast";
+
 const Onboarding = () => {
   const { updateUserRole, currentUser } = useAuth();
   const navigate = useNavigate();
+  const { toast } = useToast();
   const [selectedRole, setSelectedRole] = useState<UserRole>(null);
   const [loading, setLoading] = useState(false);
 
@@ -21,14 +24,11 @@ const Onboarding = () => {
     setLoading(true);
     try {
       await updateUserRole(selectedRole);
-      // Redirect based on role
-      if (selectedRole === 'owner') {
-        navigate("/list-property");
-      } else {
-        navigate("/explore");
-      }
+      // Redirect to profile for completion regardless of role
+      navigate("/profile");
     } catch (error) {
       console.error("Failed to update role", error);
+      navigate("/profile");
     } finally {
       setLoading(false);
     }
@@ -145,7 +145,7 @@ const Onboarding = () => {
             >
                 {loading ? "Processing..." : (
                     <span className="flex items-center gap-2">
-                        Continue to Dashboard <ArrowRight className="w-5 h-5" />
+                        Complete Profile <ArrowRight className="w-5 h-5" />
                     </span>
                 )}
             </Button>

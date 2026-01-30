@@ -12,9 +12,6 @@ const firebaseConfig = {
   messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID,
   appId: import.meta.env.VITE_FIREBASE_APP_ID
 };
-
-// Initialize Firebase
-// We wrap this in a try-catch to avoid crashing if config is missing
 let app;
 let auth;
 let googleProvider;
