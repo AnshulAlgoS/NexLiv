@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { API_BASE_URL } from "@/config";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -113,7 +114,7 @@ const ListProperty = () => {
         ownerEmail: formData.ownerEmail
       };
 
-      const response = await fetch('/api/properties', {
+      const response = await fetch(`${API_BASE_URL}/api/properties`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload)
