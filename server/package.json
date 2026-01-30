@@ -6,7 +6,7 @@
   "scripts": {
     "start": "node index.js",
     "dev": "nodemon index.js",
-    "build": "echo '❌ ERROR: Render is trying to build in /server directory. Please change Root Directory in Render settings to be empty (project root).' && exit 1"
+    "build": "cd .. && npm install && npm run build"
   },
   "dependencies": {
     "express": "^4.18.2",
