@@ -113,7 +113,7 @@ const ListProperty = () => {
         ownerEmail: formData.ownerEmail
       };
 
-      const response = await fetch('http://localhost:5002/api/properties', {
+      const response = await fetch('/api/properties', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload)

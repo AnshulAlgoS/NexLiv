@@ -35,7 +35,7 @@ const Explore = () => {
   const [dbProperties, setDbProperties] = useState<any[]>([]);
 
   useEffect(() => {
-    fetch('http://localhost:5002/api/properties')
+    fetch('/api/properties')
       .then(res => res.json())
       .then(data => setDbProperties(data))
       .catch(err => console.log("Backend not reachable, displaying mock data only"));
