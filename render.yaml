@@ -1,0 +1,11 @@
+services:
+  - type: web
+    name: nexliv-platform
+    env: node
+    plan: free
+    buildCommand: npm run build
+    startCommand: npm run start
+    envVars:
+      - key: NODE_VERSION
+        value: 22.22.0
+    autoDeploy: true
